@@ -13,10 +13,9 @@ import (
 const defaultPort = "8102"
 const bar = "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-"
 
-func dropErr(b []byte, err error) (string) {
+func dropErr(b []byte, err error) string {
 	return string(b)
 }
-
 
 func factory() func(http.ResponseWriter, *http.Request) {
 	loc, _ := time.LoadLocation("Asia/Tokyo")
@@ -33,10 +32,15 @@ func factory() func(http.ResponseWriter, *http.Request) {
 
 func main() {
 	port := os.Getenv("PORT")
-	if port == "" { port = defaultPort }
+	if port == "" {
+		port = defaultPort
+	}
+
+	fmt.Print("Runing echo server on port " + port + "\n")
+	fmt.Print(bar + "\n")
 
 	http.HandleFunc("/", factory())
-	err := http.ListenAndServe(":" + port, nil)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
